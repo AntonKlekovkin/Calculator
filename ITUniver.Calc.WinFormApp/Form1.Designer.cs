@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbOperation = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnReset = new System.Windows.Forms.Button();
-            this.btnLuck = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tbInput = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tbResult = new System.Windows.Forms.TextBox();
+            this.lbHistory = new System.Windows.Forms.ListBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -71,8 +72,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.btnReset);
-            this.panel1.Controls.Add(this.btnLuck);
             this.panel1.Controls.Add(this.btnCalc);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 237);
@@ -80,28 +79,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(317, 66);
             this.panel1.TabIndex = 5;
-            // 
-            // btnReset
-            // 
-            this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset.Location = new System.Drawing.Point(117, 12);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(82, 42);
-            this.btnReset.TabIndex = 7;
-            this.btnReset.Text = "Очистить";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // btnLuck
-            // 
-            this.btnLuck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLuck.Location = new System.Drawing.Point(10, 12);
-            this.btnLuck.Name = "btnLuck";
-            this.btnLuck.Size = new System.Drawing.Size(82, 42);
-            this.btnLuck.TabIndex = 6;
-            this.btnLuck.Text = "Мне повезет";
-            this.btnLuck.UseVisualStyleBackColor = true;
-            this.btnLuck.Click += new System.EventHandler(this.btnLuck_Click);
             // 
             // btnCalc
             // 
@@ -135,11 +112,14 @@
             this.tbInput.Name = "tbInput";
             this.tbInput.Size = new System.Drawing.Size(297, 20);
             this.tbInput.TabIndex = 0;
+            this.tbInput.Click += new System.EventHandler(this.tbInput_Click);
             this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
             this.tbInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbInput_KeyPress);
+            this.tbInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbInput_KeyUp);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.lbHistory);
             this.groupBox3.Controls.Add(this.tbResult);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 118);
@@ -153,12 +133,25 @@
             // tbResult
             // 
             this.tbResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbResult.Dock = System.Windows.Forms.DockStyle.Top;
             this.tbResult.Location = new System.Drawing.Point(10, 23);
             this.tbResult.Name = "tbResult";
             this.tbResult.ReadOnly = true;
             this.tbResult.Size = new System.Drawing.Size(297, 20);
             this.tbResult.TabIndex = 0;
+            // 
+            // lbHistory
+            // 
+            this.lbHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbHistory.FormattingEnabled = true;
+            this.lbHistory.Location = new System.Drawing.Point(10, 43);
+            this.lbHistory.Name = "lbHistory";
+            this.lbHistory.Size = new System.Drawing.Size(297, 66);
+            this.lbHistory.TabIndex = 1;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
@@ -188,13 +181,13 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox cbOperation;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.Button btnLuck;
         private System.Windows.Forms.Button btnCalc;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tbResult;
         private System.Windows.Forms.TextBox tbInput;
+        private System.Windows.Forms.ListBox lbHistory;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
