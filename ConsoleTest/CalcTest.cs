@@ -8,21 +8,6 @@ namespace ConsoleTest
     public class CalcTest
     {
         [TestMethod]
-        public void TestSum()
-        {
-            // Arrange
-            var calc = new Calc();
-            var x = 10;
-            var y = 5;
-            
-            // Act
-            var res_sum = calc.sum(x, y);
-            
-            //Assert
-            Assert.AreEqual(15, res_sum);
-        }
-
-        [TestMethod]
         public void TestSub()
         {
             // Arrange
@@ -31,26 +16,26 @@ namespace ConsoleTest
             var y = 5;
 
             // Act
-            var res_sub = calc.sub(x, y);
+            var result = calc.Sub(x, y);
 
-            //Assert
-            Assert.AreEqual(5, res_sub);
+            // Assert
+            Assert.AreEqual(5, result);
         }
 
         [TestMethod]
-        public void TestMul()
+        public void TestSum()
         {
             // Arrange
             var calc = new Calc();
             var x = 10;
             var y = 5;
-            
+
             // Act
-            var res_mul = calc.mul(x, y);
-            
-            //Assert
-            Assert.AreEqual(50, res_mul);
-         }
+            var result = calc.Sum(x, y);
+
+            // Assert
+            Assert.AreEqual(15, result);
+        }
 
         [TestMethod]
         public void TestDiv()
@@ -59,26 +44,29 @@ namespace ConsoleTest
             var calc = new Calc();
             var x = 10;
             var y = 5;
-            
+
             // Act
-            var res_div = calc.div(x, y);
-            
-            //Assert
-            Assert.AreEqual(2, res_div);
+            var result = calc.Div(x, y);
+            var result1 = calc.Div(x, 0);
+
+            // Assert
+            Assert.AreEqual(2, result);
+            Assert.AreEqual(double.PositiveInfinity, result1);
         }
 
         [TestMethod]
-        public void TestSqrt()
+        public void TestPow()
         {
             // Arrange
             var calc = new Calc();
-            var z = 25;
+            var x = 2;
+            var y = 3;
 
             // Act
-            var res_sqrt = calc.sqrt(z);
+            var result = calc.Pow(x, y);
 
-            //Assert
-            Assert.AreEqual(5, res_sqrt);
+            // Assert
+            Assert.AreEqual(8, result);
         }
     }
 }

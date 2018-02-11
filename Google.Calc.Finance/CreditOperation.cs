@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Google.Calc.Finance
 {
     public class CreditOperation : ITUniver.Calc.Core.Interfaces.IOperation
     {
-        public int argCount => 2;
-
-        public string Name
+        public int argCount
         {
-            get { return "credit"; }
+            get { return 2; }
         }
+
+        public string Name => "credit";
 
         public double Exec(double[] args)
         {

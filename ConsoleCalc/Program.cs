@@ -1,10 +1,6 @@
-﻿using ConsoleCalc;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleCalc
 {
@@ -14,60 +10,47 @@ namespace ConsoleCalc
         {
 
             var calc = new Calc();
+
             var operations = calc.GetOperNames();
-            string oper, str;
-            string[] param = null;
 
             Console.WriteLine("Калькулятор");
-            
+
             if (args.Length == 0)
             {
-                Console.WriteLine("Список возможных функций:");
+                Console.WriteLine("Введите операцию");
                 foreach (var item in operations)
                 {
                     Console.WriteLine(item);
                 }
 
-                Console.WriteLine("Введите название функции:");
-                oper = Console.ReadLine();
+                string oper = Console.ReadLine();
 
-                Console.WriteLine("Введите аргументы строкой через запятую:");
-                str = Console.ReadLine();
+                Console.WriteLine("Введите параметр через пробел");
+                var x = Console.ReadLine();
 
-                param = str.Split(',');
+                args = new[] { oper, x, "" };
+
             }
 
-            else
-            {
-                oper = args[0];
-                param = args[1].Split(',');
-            }
+            Calc(args[0], args[1], args[2]);
 
-            Calculation(oper, param);
             Console.ReadKey();
         }
 
-        static void Calculation(string oper, string[] args)
+        static void Calc(string oper, string x, string y)
         {
-            Calc calc = new Calc();
+            var calc = new Calc();
 
-            double[] args1 = new double[args.Length];
+            var args = x.Trim().Split(' ').Select(it => Convert.ToDouble(it)).ToList();
 
-            for (int i = 0; i < args.Length; i++)
+            if (!string.IsNullOrWhiteSpace(y))
             {
-                args1[i] = Convert.ToDouble(args[i]);
+                args.Add(Convert.ToDouble(y));
             }
 
-            var res = calc.Exec(oper, args1);
+            var result = calc.Exec(oper, args.ToArray());
 
-            if (oper == "sqrt")
-            {
-                Console.WriteLine($"{oper}({args[0]})={res}");
-            }
-            else
-            {
-                Console.WriteLine($"{oper}({String.Join(",", args)})={res}");
-            }
+            Console.WriteLine($"{oper}({string.Join(",", args)}) = {result}");
 
         }
     }

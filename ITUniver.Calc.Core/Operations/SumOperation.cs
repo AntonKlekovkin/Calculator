@@ -3,16 +3,13 @@ using System.Linq;
 
 namespace ITUniver.Calc.Core.Operations
 {
-    class SumOperation : IOperation
+    public class SumOperation : SuperOperation
     {
-        public int argCount => 2;
+        public override string Description => "Арифметическое действие, посредством которого из двух или нескольких чисел получают новое, содержащее столько единиц, сколько было во всех данных числах вместе.";
 
-        public string Name
-        {
-            get { return "sum"; }
-        }
+        public override string Name => "sum";
 
-        public double Exec(double[] args)
+        public override double Exec(double[] args)
         {
             return args.Sum();
         }

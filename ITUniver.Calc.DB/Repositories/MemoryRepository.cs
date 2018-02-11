@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ITUniver.Calc.DB.Models;
+using System.Collections.Generic;
 
 namespace ITUniver.Calc.DB.Repositories
 {
@@ -26,9 +23,7 @@ namespace ITUniver.Calc.DB.Repositories
             items.Add(item);
         }
 
-        public IList<IHistoryItem> GetAll()
-        {
-            return items;
-        }
+        public IEnumerable<IHistoryItem> GetAll()
+        { return null; }
     }
 }

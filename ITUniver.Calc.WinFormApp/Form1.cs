@@ -1,17 +1,23 @@
-﻿using ITUniver.Calc.DB.Repositories;
+﻿using ITUniver.Calc.Core.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.CheckedListBox;
 
 namespace ITUniver.Calc.WinFormApp
 {
     public partial class Form1 : Form
     {
-        private double CalcTime = 0;
-        private static IHistoryRepository History = new MemoryRepository();
+
         private ConsoleCalc.Calc calc { get; set; }
+
+        private IOperation lastOperation { get; set; }
+
         public Form1()
         {
             InitializeComponent();
@@ -20,94 +26,67 @@ namespace ITUniver.Calc.WinFormApp
 
             calc = new ConsoleCalc.Calc();
 
-            var operations = calc.GetOperNames();
-
-            cbOperation.DataSource = operations;
+            cbOperation.Items.Clear();
             
-            //cbOperation.Items.Clear();
-            //cbOperation.Items.AddRange(operations);
+            var operations = calc.GetOpers();
+            cbOperation.DataSource = operations;
+            //var superOperations = operations.OfType<SuperOperation>();
+
+            //cbOperation.Items.AddRange(
+            //    superOperations
+            //        .Select(s => s.OwnerName)
+            //        .ToArray()
+            //);
+
+            //cbOperation.Items.AddRange(
+            //    operations
+            //        .Except(superOperations)
+            //        .Select(s => s.Name)
+            //        .ToArray()
+            //);
+
+            btnCalc.Enabled = false;
+            #endregion
+
+            #region Загрузка истории
+
+            lbHistory.Items.AddRange(MyHelper.GetAll());
 
             #endregion
+
         }
-                
+
+        private void btnLuck_Click(object sender, EventArgs e)
+        {
+            tbResult.Text = "Успех!";
+        }
+
         private void btnCalc_Click(object sender, EventArgs e)
         {
             tbInput.Focus();
             tbInput_Click(sender, e);
 
-            timer1.Enabled = false;
-            CalcTime = 0;
+            Calculate();
+        }
 
+        private void cbOperation_SelectedIndexChanged(object sender, EventArgs e)
+        {
             // получить операцию
-            var oper = $"{cbOperation.SelectedItem}";
+            lastOperation = cbOperation.SelectedItem as IOperation;
 
-            // полуить данные
-            var args = tbInput.Text
-                .Trim()
-                .Split(' ')
-                .Select(str => Convert.ToDouble(str))
-                .ToArray();
-
-            //выислить результат
-            var result = calc.Exec(oper, args);
-
-            // показать результат
-            tbResult.Text = $"{result}";
-
-            // добавить в историю в БД
-            MyHelper.AddToHistory(oper, args, result);
-            
-            // добавить в историю на форму
-            //lbHistory.Items.Add($"{result}");
-            var items = MyHelper.GetAll();
-            lbHistory.Items.Clear();
-                        
-            lbHistory.Items.AddRange(items.Select(it => 
-                it.Operation + 
-                "(" + 
-                it.Args.Replace(' ', ',') + 
-                ")=" 
-                + it.Result.ToString())
-                .ToArray() );
-
-        }
-
-        private void cbOperation_TextChanged(object sender, EventArgs e)
-        {
-            if(cbOperation.Text != "")
-            {
-                tbInput.Enabled = true;
-            }
-            else
-            {
-                tbInput.Enabled = false;
-            }
-        }
-
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            tbInput.Clear();
-            tbResult.Clear();
+            tbInput.Enabled = true;
         }
 
         private void tbInput_TextChanged(object sender, EventArgs e)
         {
-            btnCalc.Enabled = true;
-
-            timer1.Enabled = true;
-            CalcTime = 0;
-
-
+            btnCalc.Enabled = !string.IsNullOrWhiteSpace(tbInput.Text);
         }
 
-
-        private void tbInput_KeyPress(object sender, KeyPressEventArgs e)
+        private void tbInput_KeyUp(object sender, KeyEventArgs e)
         {
-            var number = e.KeyChar;
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && number != 8 && number != 0x20 && number != '\u0016') //цифры, клавиша BackSpace и запятая а ASCII
+            if (e.KeyData == Keys.Enter)
             {
-                e.Handled = true;
-                //btnCalc.PerformClick();
+                btnCalc_Click(sender, e);
             }
         }
 
@@ -116,23 +95,35 @@ namespace ITUniver.Calc.WinFormApp
             tbInput.SelectAll();
         }
 
-        private void tbInput_KeyUp(object sender, KeyEventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
-            if(e.KeyData == Keys.Enter)
-            {
-                btnCalc_Click(sender, e);
-            }
+
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Calculate()
         {
-            CalcTime += timer1.Interval;
 
-            if(CalcTime==1000 && tbInput.Text != "")
-            {
-                btnCalc_Click(sender, e);
-                timer1.Enabled = false;
-            }
+            if (lastOperation == null)
+                return;
+
+            // получить данные
+            var args = tbInput.Text
+                .Trim()
+                .Split(' ')
+                .Select(str => Convert.ToDouble(str))
+                .ToArray();
+
+            // вычислить результат
+            var result = lastOperation.Exec(args);
+
+            // показать результат
+            tbResult.Text = $"{result}";
+
+            // добавить в историю в БД
+            MyHelper.AddToHistory(lastOperation.Name, args, result);
+            // добавить в историю на форму
+            lbHistory.Items.Clear();
+            lbHistory.Items.AddRange(MyHelper.GetAll());
         }
     }
 }

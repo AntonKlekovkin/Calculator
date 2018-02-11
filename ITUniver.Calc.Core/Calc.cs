@@ -16,17 +16,22 @@ namespace ConsoleCalc
         {
             operations = new List<IOperation>();
 
-            // загружаем наши операции
+            // Загружаем наши операции
             LoadOperation(Assembly.GetExecutingAssembly());
 
-            // загружаем сторонние библиотеки с операциями
+            // Загружаем сторонние библиотеки с операциями
             var extensionsDir = Path.Combine(Environment.CurrentDirectory, "Extensions");
+
+            if (!Directory.Exists(extensionsDir))
+                return;
+
             var files = Directory.GetFiles(extensionsDir, "*.dll");
 
             foreach (var file in files)
             {
                 LoadOperation(Assembly.LoadFile(file));
             }
+
         }
 
         private void LoadOperation(Assembly assembly)
@@ -42,70 +47,78 @@ namespace ConsoleCalc
 
                 if (isOperation)
                 {
-                    // создаем экземпляр объекта                   
+                    // создаем эксземпляр объекта
                     var obj = Activator.CreateInstance(item);
-
+                    // пытаемся превратить его в операцию
                     var operation = obj as IOperation;
+                    // если удалось
                     if (operation != null)
                     {
+                        // добавляем в список операций
                         operations.Add(operation);
                     }
-
                 }
+
             }
         }
 
-
-
         /// <summary>
-        /// Получить список имен операций
+        /// Получить список имен операциий
         /// </summary>
         /// <returns></returns>
         public string[] GetOperNames()
         {
-            return operations.Select(o => o.Name).ToArray();
+            return operations.Select(it => it.Name).ToArray();
+        }
+
+        /// <summary>
+        /// Получить список имен операциий
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("Будет удалено в след.версии")]
+        public IOperation[] GetOpers()
+        {
+            return operations.ToArray();
         }
 
         public double Exec(string oper, double[] args)
-        {     
-
+        {
             // найти операцию в списке
-            var operation = operations.FirstOrDefault(o => o.Name == oper);
-                                    
-            // если не найдена - возвращаем ошибку
+            var operation = operations
+                .FirstOrDefault(o => o.Name == oper);
+
+            // если не найдено - возвращает ошибку
             if (operation == null)
-            {
                 return double.NaN;
-            }
 
             // если нашли
             // передаем ей аргументы и вычисляем результат
             var result = operation.Exec(args);
-            
-            // возвращаем результат 
+
+            // возвращаем результат
             return result;
         }
-        public double sub(double x, double y)
+
+        public double Sum(double x, double y)
+        {
+            var oper = new SumOperation();
+            var result = oper.Exec(new[] { x, y, });
+            return result;
+        }
+
+        public double Sub(double x, double y)
         {
             return x - y;
         }
-        public double sum(double x, double y)
-        {
-            var oper = new SumOperation();
-            var result = oper.Exec(new[] { x, y });
-            return x + y;
-        }
-        public double mul(double x, double y)
-        {
-            return x * y;
-        }
-        public double div(double x, double y)
+
+        public double Div(double x, double y)
         {
             return x / y;
         }
-        public double sqrt(double x)
+
+        public double Pow(double x, double y)
         {
-            return Math.Sqrt(x);
+            return Math.Pow(x, y);
         }
     }
 }
