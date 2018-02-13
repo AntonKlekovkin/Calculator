@@ -11,7 +11,7 @@ namespace ITUniver.Calc.DB.Repositories
         where T : IEntity
     {
         // todo: вынести в конфиг
-        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\BlockchainCalculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\IT Univer\Calculator2\Calculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
 
         public void Delete(long id)
         {

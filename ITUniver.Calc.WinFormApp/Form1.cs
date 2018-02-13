@@ -50,7 +50,7 @@ namespace ITUniver.Calc.WinFormApp
 
             #region Загрузка истории
 
-            lbHistory.Items.AddRange(MyHelper.GetAll());
+            //lbHistory.Items.AddRange(MyHelper.GetAll());
 
             #endregion
 
