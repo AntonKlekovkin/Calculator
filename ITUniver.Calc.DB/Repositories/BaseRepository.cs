@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using ITUniver.Calc.DB.Models;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 using System.Globalization;
 
 namespace ITUniver.Calc.DB.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T>
-        where T : IEntity
+        where T : class, IEntity
     {
         // todo: вынести в конфиг
-        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\IT Univer\Calculator2\Calculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
+        protected string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\BlockchainCalculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
+
+        protected string tableName { get; set; }
+
+        public BaseRepository()
+        {
+            this.tableName = typeof(T).Name;
+        }
+
+        public BaseRepository(string tableName)
+        {
+            this.tableName = tableName;
+        }
 
         public void Delete(long id)
         {
@@ -25,20 +37,57 @@ namespace ITUniver.Calc.DB.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return null;
+            return ReadData();
         }
 
         public void Save(T item)
         {
-            /*
-            var doubleResult = item.Result.HasValue 
-                ? item.Result.Value.ToString(CultureInfo.InvariantCulture)
-                : "null";
+            var props = typeof(T).GetProperties()
+                .Where(p => p.Name != "Id")
+                .OrderBy(p => p.Name);
+
+            var columns = props.Select(p => p.Name);
+
+            var values = new List<string>();
+
+            foreach (var prop in props)
+            {
+                var value = prop.GetValue(item);
+                var str = $"{value}";
+
+                if (value == null)
+                {
+                    str = "NULL";
+                }
+                else if (value is string)
+                {
+                    str = $"N'{value}'";
+                }
+                else if (value is DateTime)
+                {
+                    var date = (DateTime)value;
+                    str = $"N'{date.ToString(CultureInfo.InvariantCulture)}'";
+                }
+                else if (value is double)
+                {
+                    var doubleValue = (double)value;
+                    str = $"{doubleValue.ToString(CultureInfo.InvariantCulture)}";
+                }
+                // todo boolean
+
+                values.Add(str);
+            }
+
+            var strColumns = "[" + string.Join("], [", columns) + "]";
+            var strValues = string.Join(", ", values);
+
+            var insertQuery =
+                $"INSERT INTO [dbo].[{tableName}] ({strColumns}) VALUES ({strValues})";
+
 
             string queryString = item.Id > 0
                 ? "UPDATE * FROM [dbo].[History]"
-                : "INSERT INTO [dbo].[History] ([Operation], [Args], [Result], [ExecDate])" +
-                $" VALUES (N'{item.Operation}', N'{item.Args}', {doubleResult}, N'{item.ExecDate}') ";
+                : insertQuery;
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -46,16 +95,16 @@ namespace ITUniver.Calc.DB.Repositories
                 connection.Open();
 
                 var count = command.ExecuteNonQuery();
-            }*/
+            }
         }
 
         #region Работа с БД
 
-        private IEnumerable<IHistoryItem> ReadData()
+        private IEnumerable<T> ReadData()
         {
-            var items = new List<IHistoryItem>();
+            var items = new List<T>();
 
-            string queryString = "SELECT * FROM [dbo].[History]";
+            var queryString = $"SELECT * FROM [dbo].[{tableName}]";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -75,24 +124,24 @@ namespace ITUniver.Calc.DB.Repositories
             return items;
         }
 
-        private IHistoryItem ReadSingleRow(IDataRecord record)
+        private T ReadSingleRow(IDataRecord record)
         {
-            var item = new HistoryItem();
+            var obj = Activator.CreateInstance<T>();
 
-            item.Id = (long)record["Id"];
-            item.Operation = (long)record["Operation"];
-            item.Args = (string)record["Args"];
+            var tclass = typeof(T);
+            var props = tclass.GetProperties();
 
-            var ind = record.GetOrdinal("Result");
-            var isnull = record.IsDBNull(ind);
-            if (!isnull)
+            foreach (var prop in props)
             {
-                item.Result = (double?)record["Result"];
+                var ind = record.GetOrdinal(prop.Name);
+                var isnull = record.IsDBNull(ind);
+                if (!isnull)
+                {
+                    var value = record[prop.Name];
+                    prop.SetValue(obj, value);
+                }
             }
-
-            item.ExecDate = (DateTime)record["ExecDate"];
-
-            return item;
+            return obj;
         }
 
         #endregion

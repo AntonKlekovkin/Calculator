@@ -61,6 +61,7 @@
             // cbOperation
             // 
             this.cbOperation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbOperation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbOperation.FormattingEnabled = true;
             this.cbOperation.Items.AddRange(new object[] {
             "sum",
@@ -68,8 +69,9 @@
             "div"});
             this.cbOperation.Location = new System.Drawing.Point(10, 25);
             this.cbOperation.Name = "cbOperation";
-            this.cbOperation.Size = new System.Drawing.Size(506, 24);
+            this.cbOperation.Size = new System.Drawing.Size(506, 23);
             this.cbOperation.TabIndex = 0;
+            this.cbOperation.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbOperation_DrawItem);
             this.cbOperation.SelectedIndexChanged += new System.EventHandler(this.cbOperation_SelectedIndexChanged);
             // 
             // groupBox1

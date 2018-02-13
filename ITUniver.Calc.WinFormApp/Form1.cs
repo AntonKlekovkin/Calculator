@@ -30,27 +30,14 @@ namespace ITUniver.Calc.WinFormApp
             
             var operations = calc.GetOpers();
             cbOperation.DataSource = operations;
-            //var superOperations = operations.OfType<SuperOperation>();
-
-            //cbOperation.Items.AddRange(
-            //    superOperations
-            //        .Select(s => s.OwnerName)
-            //        .ToArray()
-            //);
-
-            //cbOperation.Items.AddRange(
-            //    operations
-            //        .Except(superOperations)
-            //        .Select(s => s.Name)
-            //        .ToArray()
-            //);
+            cbOperation.DisplayMember = "Name";
 
             btnCalc.Enabled = false;
             #endregion
 
             #region Загрузка истории
 
-            //lbHistory.Items.AddRange(MyHelper.GetAll());
+            lbHistory.Items.AddRange(MyHelper.GetAll());
 
             #endregion
 
@@ -124,6 +111,20 @@ namespace ITUniver.Calc.WinFormApp
             // добавить в историю на форму
             lbHistory.Items.Clear();
             lbHistory.Items.AddRange(MyHelper.GetAll());
+        }
+
+        private void cbOperation_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            var item = cbOperation.Items[e.Index] as IOperation;
+            if (item == null)
+                return;
+
+            var superOper = cbOperation.Items[e.Index] as SuperOperation;
+            Brush brush = superOper != null ? Brushes.Green : Brushes.Red;
+            var name = superOper != null ? superOper.OwnerName : item.Name;
+            e.Graphics.DrawString(name, e.Font, brush, e.Bounds);
+            e.DrawFocusRectangle();
         }
     }
 }
