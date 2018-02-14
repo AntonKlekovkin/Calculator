@@ -11,7 +11,7 @@ namespace ITUniver.Calc.DB.Repositories
         where T : class, IEntity
     {
         // todo: вынести в конфиг
-        protected string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\BlockchainCalculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
+        protected string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\IT Univer\Calculator2\Calculator\ITUniver.Calc.DB\App_Data\CalcDB.mdf;Integrated Security=True";
 
         protected string tableName { get; set; }
 
@@ -73,6 +73,11 @@ namespace ITUniver.Calc.DB.Repositories
                     var doubleValue = (double)value;
                     str = $"{doubleValue.ToString(CultureInfo.InvariantCulture)}";
                 }
+                else if (value is bool)
+                {
+                    str = (bool)value==true ? "1" : "0";
+                    //str = $"{bool_value}";
+                }
                 // todo boolean
 
                 values.Add(str);
@@ -85,9 +90,11 @@ namespace ITUniver.Calc.DB.Repositories
                 $"INSERT INTO [dbo].[{tableName}] ({strColumns}) VALUES ({strValues})";
 
 
-            string queryString = item.Id > 0
-                ? "UPDATE * FROM [dbo].[History]"
-                : insertQuery;
+            //string queryString = item.Id > 0
+            //    ? $"UPDATE * FROM [dbo].[{tableName}]"
+            //    : insertQuery;
+
+            string queryString = insertQuery;
 
             using (var connection = new SqlConnection(connectionString))
             {

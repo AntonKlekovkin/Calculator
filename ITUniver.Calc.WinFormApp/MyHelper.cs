@@ -22,7 +22,7 @@ namespace ITUniver.Calc.WinFormApp
         {
             var item = new HistoryItem();
             item.Args = string.Join(" ", args);
-            item.Operation = 1;//oper;
+            item.Operation = 1; //oper;
             item.Result = result;
             item.ExecDate = DateTime.Now;
 
