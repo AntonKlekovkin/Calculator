@@ -9,16 +9,28 @@ namespace ITUniver.Calc.DB.Models
 {
     public class User : IEntity
     {
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
 
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
-        public string Login { get; set; }
+        public virtual string Login { get; set; }
 
-        public string Password { get; set; }
+        public virtual string Password { get; set; }
 
-        public DateTime? BirthDay { get; set; }
+        public virtual DateTime? BirthDay { get; set; }
 
-        public bool? Sex { get; set; }
+        public virtual bool Sex { get; set; }
+
+        public virtual ICollection<HistoryItem> History { get; set; }
+
+        public virtual UserStatus Status { get; set; }
+
+    }
+
+    public enum UserStatus
+    {
+        Deleted = 0,
+        Active = 1,
+        Ban = 2
     }
 }

@@ -1,10 +1,12 @@
 ﻿using ITUniver.Calc.DB.Models;
+using ITUniver.Calc.DB.NH.Repositories;
 using ITUniver.Calc.DB.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using WebCalc.Models;
 
 namespace WebCalc.Controllers
@@ -12,15 +14,15 @@ namespace WebCalc.Controllers
     public class RegisterController : Controller
     {
         private IUserRepository Users { get; set; }
-        private IBaseRepository<User> UsersDB = new BaseRepository<User>("User");
-
+       
         public RegisterController()
         {
-            Users = new UserRepository();
+            Users = new NHUserRepository();
         }
 
 
         // GET: Register
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -35,32 +37,31 @@ namespace WebCalc.Controllers
                 return View();
             }
 
-            // проверить не занят ли логин
-            if(!Users.Check(model.Login))
+            if (Users.GetByName(model.Login) == null)
             {
-                // добавить пользователя в базу данных
-                AddToUserDB(model.Login, model.Name, model.Password, model.BirthDay, model.Sex);
+                var user = new User()
+                {
+                    Login = model.Login,
+                    Name = model.Name,
+                    Password = model.Password,
+                    Sex = model.Sex,
+                    BirthDay = model.BirthDay,
+                    Status = UserStatus.Active
+                };
+                Users.Save(user);
 
-                return RedirectToAction("Login", "Account");
+                // поставить отметку о аутентификации
+                FormsAuthentication.SetAuthCookie(model.Login, true);
+
+                return RedirectToAction("Index", "Calc");
             }
-
-            ModelState.AddModelError("", "Не удалось выполнить регистрацию");
+            else
+            {
+                ModelState.AddModelError("Login", "Придумайте другое имя. Это уже занято");
+            }
 
             return View();
         }
 
-        public void AddToUserDB(string login, string name, string password, DateTime birthday, bool? sex)
-        {
-            
-            var user = new User();
-            user.Id = Users.GetAll().Max(u => u.Id) + 1; 
-            user.Login = login;
-            user.Name = name;
-            user.Password = password;
-            user.BirthDay = birthday;
-            user.Sex = sex;
-
-            UsersDB.Save(user);
-        }
     }
 }

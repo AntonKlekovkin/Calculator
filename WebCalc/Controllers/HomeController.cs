@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using WebCalc.Models;
+﻿using System.Web.Mvc;
 
 namespace WebCalc.Controllers
 {
@@ -18,18 +13,18 @@ namespace WebCalc.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
+
             return View();
         }
 
         public ActionResult Contact(long id, string name)
         {
-            ViewBag.Id = id;
-            ViewBag.Namesdasdqw = name;
+            ViewData["Id"] = id;
+            ViewBag.Namesfsdfsd = name;
             ViewBag.Message = $"Your contact page. {id} {name}";
-
-
-            return View("OpDetails");
+            return View();
         }
+
         public ActionResult Empty(long id)
         {
             return Content($"id={id}");

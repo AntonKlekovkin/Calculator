@@ -40,6 +40,11 @@ namespace ITUniver.Calc.DB.Repositories
             return ReadData();
         }
 
+        public IEnumerable<T> GetAll(string condition)
+        {
+            return ReadData(condition);
+        }
+
         public void Save(T item)
         {
             var props = typeof(T).GetProperties()
@@ -78,8 +83,7 @@ namespace ITUniver.Calc.DB.Repositories
                     str = (bool)value==true ? "1" : "0";
                     //str = $"{bool_value}";
                 }
-                // todo boolean
-
+                
                 values.Add(str);
             }
 
@@ -90,11 +94,11 @@ namespace ITUniver.Calc.DB.Repositories
                 $"INSERT INTO [dbo].[{tableName}] ({strColumns}) VALUES ({strValues})";
 
 
-            //string queryString = item.Id > 0
-            //    ? $"UPDATE * FROM [dbo].[{tableName}]"
-            //    : insertQuery;
+            string queryString = item.Id > 0
+                ? $"UPDATE * FROM [dbo].[{tableName}]"
+                : insertQuery;
 
-            string queryString = insertQuery;
+            //string queryString = insertQuery;
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -107,11 +111,16 @@ namespace ITUniver.Calc.DB.Repositories
 
         #region Работа с БД
 
-        private IEnumerable<T> ReadData()
+        private IEnumerable<T> ReadData(string condition = "")
         {
             var items = new List<T>();
 
             var queryString = $"SELECT * FROM [dbo].[{tableName}]";
+
+            if (!string.IsNullOrWhiteSpace(condition))
+            {
+                queryString += $" WHERE {condition}";
+            }
 
             using (var connection = new SqlConnection(connectionString))
             {

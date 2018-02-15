@@ -5,14 +5,6 @@ namespace ITUniver.Calc.DB.Repositories
     public interface IUserRepository : IBaseRepository<User>
     {
         /// <summary>
-        /// Проверить наличие пользователя с таким логином
-        /// </summary>
-        /// <param name="login">Имя пользователя</param>
-        /// <param name="password">Пароль</param>
-        /// <returns></returns>
-        bool Check(string login);
-
-        /// <summary>
         /// Проверить наличие пользователя с таким паролем
         /// </summary>
         /// <param name="login">Имя пользователя</param>
@@ -26,8 +18,5 @@ namespace ITUniver.Calc.DB.Repositories
         /// <param name="login">Имя пользователя</param>
         /// <returns></returns>
         User GetByName(string login);
-
-
     }
 }
-    

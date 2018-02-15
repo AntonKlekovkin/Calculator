@@ -25,14 +25,9 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@User.Identity.Name</li>
+                        <li><a href="#"> @User.Identity.Name</a></li>
                         <li>@Html.ActionLink("Выйти", "Logout", "Account")</li>
                     }
-                    else
-                    {
-                        <li>@Html.ActionLink("Зарегестрироваться", "Register", "Register")</li>
-                    }
-
 
                 </ul>
             </div>

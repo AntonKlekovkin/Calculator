@@ -9,14 +9,14 @@ namespace ITUniver.Calc.DB.Models
 {
     public class Operation : IEntity
     {
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
 
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
-        public string Owner { get; set; }
+        public virtual string Owner { get; set; }
 
-        public int ArgsCount { get; set; }
+        public virtual int ArgsCount { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public virtual DateTime CreationDate { get; set; }
     }
 }

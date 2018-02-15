@@ -1,4 +1,5 @@
-﻿using ITUniver.Calc.DB.Repositories;
+﻿using ITUniver.Calc.DB.NH.Repositories;
+using ITUniver.Calc.DB.Repositories;
 using System.Web.Mvc;
 using System.Web.Security;
 using WebCalc.Models;
@@ -13,7 +14,7 @@ namespace WebCalc.Controllers
 
         public AccountController()
         {
-            Users = new UserRepository();
+            Users = new NHUserRepository();
         }
 
 
@@ -53,7 +54,6 @@ namespace WebCalc.Controllers
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
-            //return View();
         }
     }
 }
