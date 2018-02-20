@@ -25,6 +25,8 @@ namespace ITUniver.Calc.DB.Models
 
         public virtual UserStatus Status { get; set; }
 
+        public virtual Role Role { get; set; }
+
     }
 
     public enum UserStatus

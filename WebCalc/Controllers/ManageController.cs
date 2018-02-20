@@ -1,15 +1,11 @@
 ﻿using ITUniver.Calc.DB.Models;
 using ITUniver.Calc.DB.NH.Repositories;
 using ITUniver.Calc.DB.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace WebCalc.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class ManageController : Controller
     {
         private IUserRepository Users { get; set; }
@@ -29,12 +25,7 @@ namespace WebCalc.Controllers
 
         public ActionResult Delete(long id)
         {
-            var user = Users.Find(id);
-            if (user != null)
-            {
-                user.Status = UserStatus.Deleted;
-                Users.Save(user);
-            }
+            Users.Delete(id);
             return RedirectToAction("Index");
         }
 

@@ -19,6 +19,8 @@
       <key column="Author"/>
       <one-to-many class="HistoryItem"/>
     </set>
+
+    <many-to-one name="Role" class="Role"/>
     
   </class>
 

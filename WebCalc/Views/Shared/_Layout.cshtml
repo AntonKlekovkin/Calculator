@@ -23,6 +23,11 @@
                     <li>@Html.ActionLink("История", "History", "Calc")</li>
                     <li>@Html.ActionLink("Операции", "Index", "Operation")</li>
 
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li>@Html.ActionLink("Управление", "Index", "Manage")</li>
+                    }
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a href="#"> @User.Identity.Name</a></li>
