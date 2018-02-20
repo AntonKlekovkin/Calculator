@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ITUniver.Calc.DB.Models.HistoryItem>
+
+@{
+    ViewBag.Title = "История";
+}
+
+<h2>История</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Operation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Args)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Result)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeCalculation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExecDate)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Operation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Args)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeCalculation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExecDate)
+            </td>
+        </tr>
+    }
+
+</table>

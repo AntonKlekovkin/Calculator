@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ITUniver.Calc.DB.Models;
+using System.Collections.Generic;
 
 namespace ITUniver.Calc.DB.Repositories
 {
@@ -26,9 +23,32 @@ namespace ITUniver.Calc.DB.Repositories
             items.Add(item);
         }
 
-        public IList<IHistoryItem> GetAll()
+        public IEnumerable<IHistoryItem> GetAll()
+        { return null; }
+
+        IEnumerable<HistoryItem> IBaseRepository<HistoryItem>.GetAll()
         {
-            return items;
+            throw new NotImplementedException();
+        }
+
+        HistoryItem IBaseRepository<HistoryItem>.Find(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(HistoryItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<HistoryItem> HistoryByUser(string login)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<HistoryItem> GetAll(string condition)
+        {
+            throw new NotImplementedException();
         }
     }
 }

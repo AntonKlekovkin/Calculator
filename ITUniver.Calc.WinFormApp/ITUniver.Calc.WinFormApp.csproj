@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D0D9F03E-A8FE-42CA-B382-17B318255BCA}</ProjectGuid>
+    <ProjectGuid>{75832E1E-A04A-4DFD-AB22-9555FAD4612B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ITUniver.Calc.WinFormApp</RootNamespace>
@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ITUniver.Calc.Core">
-      <HintPath>..\..\ITUniver.Calc.Core\bin\Debug\ITUniver.Calc.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -84,8 +81,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ITUniver.Calc.Core\ITUniver.Calc.Core.csproj">
+      <Project>{b6f25292-f0b6-4d84-92e2-683140ede8a4}</Project>
+      <Name>ITUniver.Calc.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ITUniver.Calc.DB\ITUniver.Calc.DB.csproj">
-      <Project>{C20CD850-B6F6-48E5-A2C4-A32323E0F8D3}</Project>
+      <Project>{EA765E13-6DFF-461D-B906-EC0A4BCEB654}</Project>
       <Name>ITUniver.Calc.DB</Name>
     </ProjectReference>
   </ItemGroup>
